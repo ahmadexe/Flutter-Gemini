@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/screens/text_from_image.dart';
 import 'package:flutter_gemini/screens/text_from_text.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -25,8 +26,11 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const TextFromTextScreen()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TextFromTextScreen(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   side: const BorderSide(
@@ -37,6 +41,25 @@ class DashboardScreen extends StatelessWidget {
                   foregroundColor: Colors.black,
                 ),
                 child: const Text('Text from Text'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TextFromImage(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  side: const BorderSide(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                ),
+                child: const Text('Text from Image'),
               ),
             ],
           ),
