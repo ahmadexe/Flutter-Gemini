@@ -18,4 +18,11 @@ class MediaProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
+  void reset() {
+    image = null;
+    bytes = null;
+    isLoading = false;
+    notifyListeners();
+  }
 }

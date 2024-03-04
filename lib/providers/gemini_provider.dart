@@ -49,4 +49,10 @@ class GeminiProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
+  void reset() {
+    response = null;
+    isLoading = false;
+    notifyListeners();
+  }
 }

@@ -13,56 +13,73 @@ class TextFromImage extends StatelessWidget {
     final geminiProvider = Provider.of<GeminiProvider>(context);
     final mediaProvider = Provider.of<MediaProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Text from Image ✨'),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            mediaProvider.bytes == null
-                ? IconButton(
-                    onPressed: () {
-                      mediaProvider.setImage();
-                    },
-                    icon: const Icon(Icons.add),
-                  )
-                : Image.memory(mediaProvider.bytes!),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(
-                hintText: 'Enter your prompt here...',
-                border: OutlineInputBorder(),
+    return WillPopScope(
+      onWillPop: () async {
+        mediaProvider.reset();
+        geminiProvider.reset();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Text from Image ✨'),
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  mediaProvider.bytes == null
+                      ? IconButton(
+                          onPressed: () {
+                            mediaProvider.setImage();
+                          },
+                          icon: const Icon(Icons.add),
+                        )
+                      : Image.memory(
+                          mediaProvider.bytes!,
+                          height: 400,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your prompt here...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (mediaProvider.bytes != null)
+                    ElevatedButton(
+                      onPressed: () {
+                        geminiProvider.generateContentFromImage(
+                          prompt: _textController.text,
+                          bytes: mediaProvider.bytes!,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text('Generate'),
+                    ),
+                  const SizedBox(height: 16),
+                  geminiProvider.isLoading
+                      ? const CircularProgressIndicator()
+                      : Text(geminiProvider.response ?? ''),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            if (mediaProvider.bytes != null)
-              ElevatedButton(
-                onPressed: () {
-                  geminiProvider.generateContentFromImage(
-                    prompt: _textController.text,
-                    bytes: mediaProvider.bytes!,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text('Generate'),
-              ),
-            const SizedBox(height: 16),
-            geminiProvider.isLoading
-                ? const CircularProgressIndicator()
-                : Text(geminiProvider.response ?? ''),
-          ],
+          ),
         ),
       ),
     );
