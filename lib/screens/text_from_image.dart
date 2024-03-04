@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/providers/gemini_provider.dart';
+import 'package:flutter_gemini/providers/media_provider.dart';
+import 'package:provider/provider.dart';
 
 class TextFromImage extends StatelessWidget {
   const TextFromImage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final geminiProvider = Provider.of<GeminiProvider>(context);
+    final mediaProvider = Provider.of<MediaProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Text from Image ✨'),
@@ -12,8 +18,45 @@ class TextFromImage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: const Center(
-        child: Text('Text from Image Screen'),
+      body: Center(
+        child: Column(
+          children: [
+            mediaProvider.bytes == null ?
+            IconButton(
+              onPressed: () {
+                mediaProvider.setImage();
+              },
+              icon: const Icon(Icons.add),
+            ) :
+            Image.memory(mediaProvider.bytes!),
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                geminiProvider.generateContentFromImage(
+                  prompt: 'What is this guy doing',
+                  bytes: mediaProvider.bytes!,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                side: const BorderSide(
+                  color: Colors.black,
+                  width: 1,
+                ),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('Generate'),
+            ),
+
+            const SizedBox(height: 16),
+
+            geminiProvider.isLoading ?
+            const CircularProgressIndicator() :
+            Text(geminiProvider.response ?? ''),
+          ],
+        ),
       ),
     );
   }

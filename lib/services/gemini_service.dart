@@ -13,5 +13,15 @@ class GeminiService {
     final response = await model.generateContent([Content.text(prompt)]);
     return response.text;
   }
-}
 
+  Future<String?> generateContentFromImage(
+      {required String prompt, required DataPart dataPart}) async {
+
+    final text = TextPart(prompt);
+    final response = await model.generateContent([
+      Content.multi([text, dataPart])
+    ]);
+
+    return response.text;
+  }
+}
