@@ -13,11 +13,10 @@ class TextFromImage extends StatelessWidget {
     final geminiProvider = Provider.of<GeminiProvider>(context);
     final mediaProvider = Provider.of<MediaProvider>(context);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvokedWithResult: (val, res) async {
         mediaProvider.reset();
         geminiProvider.reset();
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

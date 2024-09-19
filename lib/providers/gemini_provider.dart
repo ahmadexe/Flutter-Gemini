@@ -7,7 +7,6 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiProvider extends ChangeNotifier {
   static GenerativeModel _initModel() {
-    //const key = String.fromEnvironment('GEMINI_API_KEY');
     final key = dotenv.env['GEMINI_API_KEY'];
 
     if (key!.isEmpty) {

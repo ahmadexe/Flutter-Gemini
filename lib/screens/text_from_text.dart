@@ -9,10 +9,9 @@ class TextFromTextScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final geminiProvider = Provider.of<GeminiProvider>(context);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvokedWithResult: (val, res) async {
         geminiProvider.reset();
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
